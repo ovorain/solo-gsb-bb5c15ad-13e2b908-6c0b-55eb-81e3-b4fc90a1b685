@@ -29,6 +29,7 @@ function typeIntoSchema(container: HTMLElement, v: string) {
 
 describe('OutputStage Schema 校验集成', () => {
   const baseProps = {
+    base: { id: 0 } as unknown as JsonValue,
     merged: { id: 1, tag: 'c' } as unknown as JsonValue,
     patch: [],
     onBack: () => {},

@@ -7,8 +7,10 @@ import { buildPointerLines, resolveLine } from '../merge/jsonLineMap';
 import { downloadText } from '../download';
 import SchemaPanel from './SchemaPanel';
 import ValidationIssues from './ValidationIssues';
+import PatchAuditPanel from './PatchAuditPanel';
 
 interface Props {
+  base: JsonValue;
   merged: JsonValue;
   patch: PatchOp[];
   schemaEnabled: boolean;
@@ -58,6 +60,7 @@ function JsonResultView({
 }
 
 export default function OutputStage({
+  base,
   merged,
   patch,
   schemaEnabled,
@@ -149,6 +152,7 @@ export default function OutputStage({
           </div>
         </div>
       </div>
+      <PatchAuditPanel base={base} merged={merged} autoPatch={patch} onCopy={handleCopy} />
       <div className="output-actions">
         <button onClick={onBack}>← 返回继续调整</button>
         <button onClick={onRestart}>重新开始</button>
