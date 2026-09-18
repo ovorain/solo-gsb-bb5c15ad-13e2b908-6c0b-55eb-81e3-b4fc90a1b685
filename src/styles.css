@@ -1011,6 +1011,102 @@ pre {
   margin-top: 16px;
 }
 
+/* ---------- 补丁审计面板 ---------- */
+.audit-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 16px;
+}
+
+.audit-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.audit-head h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.audit-head .hint {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.audit-input {
+  min-height: 140px;
+}
+
+.audit-panel .panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.audit-dirty {
+  color: var(--yellow);
+  font-size: 12px;
+}
+
+.audit-result {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.audit-result.pass {
+  background: rgba(52, 201, 142, 0.12);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.audit-result.failure,
+.audit-result.mismatch {
+  background: rgba(242, 85, 90, 0.12);
+  border: 1px solid var(--red);
+  color: var(--text);
+}
+
+.audit-stale {
+  color: var(--yellow);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.audit-pointer {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  color: var(--yellow);
+  margin-left: 4px;
+  word-break: break-all;
+}
+
+.audit-diff {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.audit-diff-side h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.audit-diff-side pre {
+  max-height: 180px;
+  font-size: 12px;
+}
+
 .toast {
   position: fixed;
   bottom: 24px;

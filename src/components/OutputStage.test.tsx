@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import OutputStage from './OutputStage';
 import type { CompiledSchema } from '../merge/schema';
 import { compileSchema } from '../merge/schema';
+import { diff } from '../merge/rfc6902';
 import type { JsonValue } from '../merge/types';
 
 (globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true;
@@ -29,6 +30,7 @@ function typeIntoSchema(container: HTMLElement, v: string) {
 
 describe('OutputStage Schema 校验集成', () => {
   const baseProps = {
+    base: { id: 1 } as unknown as JsonValue,
     merged: { id: 1, tag: 'c' } as unknown as JsonValue,
     patch: [],
     onBack: () => {},
@@ -113,6 +115,41 @@ describe('OutputStage Schema 校验集成', () => {
     // 重新开启后仍沿用已编译 Schema
     act(() => (h(container, '.schema-toggle input') as HTMLInputElement).click());
     expect(all(container, '.issue-group')).toHaveLength(3);
+  });
+
+  it('输出页展示补丁审计面板（预载自动生成补丁），复制与下载继续可用', () => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const base = { a: 1, b: 2 } as unknown as JsonValue;
+    const merged = { a: 1, b: 3 } as unknown as JsonValue;
+    const patch = diff(base, merged);
+    const render = makeRenderer(container);
+    render(
+      <OutputStage
+        {...baseProps}
+        base={base}
+        merged={merged}
+        patch={patch}
+        schemaEnabled={false}
+        schema={null}
+        onSchemaEnabledChange={() => {}}
+        onSchemaChange={() => {}}
+      />,
+    );
+
+    // 审计面板加载自动生成的补丁
+    const ta = h(container, '.audit-input') as HTMLTextAreaElement;
+    expect(ta).not.toBeNull();
+    expect(ta.value).toBe(JSON.stringify(patch, null, 2));
+
+    // 合并结果与补丁面板的复制 / 下载按钮保持可用
+    expect(all(container, 'button').filter((b) => b.textContent === '复制')).toHaveLength(2);
+    expect(btnByText(container, '下载 merged.json')).toBeTruthy();
+    expect(btnByText(container, '下载 patch.json')).toBeTruthy();
+
+    // 自动生成的补丁直接审计：通过
+    act(() => btnByText(container, '审计')!.click());
+    expect(h(container, '.audit-result.pass')?.textContent).toContain('审计通过');
   });
 
   it('Schema 解析失败 / $ref 无法解析时提示错误且不覆盖上一份有效 Schema', () => {
